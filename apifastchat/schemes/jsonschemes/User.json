@@ -1,0 +1,20 @@
+{
+    "id": "User",
+    "description": "schema for User",
+    "type": "object",
+    "properties":{
+		"User_id": {
+			"javaName": "id",
+			"type": "string"
+		},
+		"User_name":{
+			"javaName": "name",
+			"type": "string"
+		},
+		"User_status":{
+			"javaName": "status",
+			"$ref": "UserStatus.json"
+		}
+	}
+	
+}

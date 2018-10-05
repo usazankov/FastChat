@@ -1,0 +1,7 @@
+{
+    "id": "UserStatus",
+    "type": "string",
+	"default": "u_offline",
+    "enum": ["u_offline", "u_online"],
+	"javaEnumNames": ["Offline","Online"]
+}

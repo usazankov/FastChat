@@ -1,0 +1,12 @@
+{
+    "id": "Message",
+    "description": "schema for Message",
+    "type": "object",
+    "properties":{
+		"Message_body": {
+			"javaName": "body",
+			"type": "string"
+		}
+	}
+	
+}
