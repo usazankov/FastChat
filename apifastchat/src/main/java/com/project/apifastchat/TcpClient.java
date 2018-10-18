@@ -1,6 +1,7 @@
 package com.project.apifastchat;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -33,7 +34,6 @@ public class TcpClient implements ICommLink{
     public void run() {
 
         mRun = true;
-
         try {
             //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(SERVERIP);

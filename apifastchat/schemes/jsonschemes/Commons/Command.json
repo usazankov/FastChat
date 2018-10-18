@@ -1,0 +1,29 @@
+{
+  "id": "Command",
+  "description": "schema for Command",
+  "type": "object",
+  "properties":{
+    "Command_id": {
+      "javaName": "CommandId",
+      "type": "string",
+      "default": "c_undefined",
+      "enum": [
+        "c_undefined",
+        "c_auth_req",
+        "c_send_message",
+        "c_get_users",
+        "c_get_user_info",
+        "c_get_count_online"
+      ],
+      "javaEnumNames": [
+        "Undefined",
+        "Auth",
+        "SendMsg",
+        "GetUsers",
+        "GetUserInfo",
+        "GetCountUsersOnline"
+      ]
+    }
+  }
+
+}

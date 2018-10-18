@@ -1,0 +1,15 @@
+{
+  "id": "AuthRespEntity",
+  "description": "schema for AuthRespEntity",
+  "type": "object",
+  "extends" : {
+    "$ref" : "../Commons/CommonResp.json"
+  },
+  "properties":{
+    "User_id": {
+      "javaName": "userId",
+      "type": "string"
+    }
+  }
+
+}

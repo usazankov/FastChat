@@ -1,0 +1,27 @@
+{
+  "id": "CommonResp",
+  "description": "schema for CommonResp",
+  "type": "object",
+  "properties":{
+    "Code_resp":{
+      "javaName": "codeResp",
+      "type": "string"
+    },
+    "Command_obj": {
+      "javaName": "command",
+      "$ref": "../Commons/Command.json"
+    },
+    "Date":{
+      "type":"string",
+      "javaName": "date",
+      "format": "date",
+      "customPattern" : "dd.MM.yyyy"
+    },
+    "Time":{
+      "javaName": "time",
+      "format": "time",
+      "customPattern" : "HH:mm"
+    }
+  }
+
+}
