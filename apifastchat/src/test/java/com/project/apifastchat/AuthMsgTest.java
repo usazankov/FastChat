@@ -23,7 +23,7 @@ public class AuthMsgTest {
     private static final String USER_ID = "test_user";
     private static final String USER_NAME = "Yuri";
 
-    private AuthRequest createFakeAuthReq(){
+    public static AuthRequest createFakeAuthReq(){
         return AuthRequest.newBuilder()
                 .setUserId(USER_ID)
                 .setUserName(USER_NAME)
@@ -39,6 +39,5 @@ public class AuthMsgTest {
         jsonAuthReq = jsonAuthReq.replace(" ", "");
         jsonAuthReq = jsonAuthReq.replace("\n", "");
         assertThat(str, is(equalTo(jsonAuthReq)));
-        AuthRespEntity res;
     }
 }

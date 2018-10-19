@@ -9,10 +9,10 @@ public interface ICommLink {
 
     //Declare the interface. The method messageReceived(String message) will must be implemented in the Activity
     //class at on AsyncTask doInBackground
-    public interface OnMessageReceived {
+    public interface ICommLinkListener {
         public void messageReceived(String message);
+        public void onError(Throwable e);
     }
-
 
     /**
      * Возвращает true, если соединение установлено (или устанавливается в данный момент)

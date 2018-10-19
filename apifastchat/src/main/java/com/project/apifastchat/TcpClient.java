@@ -16,7 +16,7 @@ public class TcpClient implements ICommLink{
     private String serverMessage;
     public static final String SERVERIP = "10.35.90.162"; //your computer IP address
     public static final int SERVERPORT = 1977;
-    private OnMessageReceived mMessageListener = null;
+    private ICommLinkListener mMessageListener = null;
     private boolean mRun = false;
 
     PrintWriter out;
@@ -25,7 +25,7 @@ public class TcpClient implements ICommLink{
     /**
      *  Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public TcpClient(OnMessageReceived listener) {
+    public TcpClient(ICommLinkListener listener) {
         mMessageListener = listener;
     }
 
@@ -79,6 +79,7 @@ public class TcpClient implements ICommLink{
                 socket.close();
             }
         } catch (Exception e) {
+            mMessageListener.onError(e);
             Log.e("TCP", "C: Error", e);
         }
     }

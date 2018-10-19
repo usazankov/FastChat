@@ -2,24 +2,20 @@ package com.project.apifastchat.requests;
 
 import com.project.apifastchat.entity.AuthReqEntity;
 import com.project.apifastchat.entity.Command;
-import com.project.apifastchat.mappers.CommonJsonMapper;
 
-public class AuthRequest extends Request {
-    CommonJsonMapper<AuthReqEntity> commonJsonMapper;
+public class AuthRequest extends ARequest {
     private String userId;
     private String userName;
     private AuthRequest(){
-        commonJsonMapper = new CommonJsonMapper<>();
     }
 
-    @Override
     public String createRequest() {
         AuthReqEntity req = new AuthReqEntity();
         Command com = new Command();
         com.setCommandId(Command.CommandId.Auth);
         req.setCommand_obj(com);
         req.setUserId(userId);
-        return commonJsonMapper.toJson(req);
+        return toDataRequest(req, AuthReqEntity.class);
     }
 
     public static Builder newBuilder() {
