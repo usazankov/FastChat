@@ -10,6 +10,7 @@
       "enum": [
         "c_undefined",
         "c_auth_req",
+		"c_check_connect",
         "c_send_message",
         "c_get_users",
         "c_get_user_info",
@@ -18,6 +19,7 @@
       "javaEnumNames": [
         "Undefined",
         "Auth",
+		"CheckConnect",
         "SendMsg",
         "GetUsers",
         "GetUserInfo",

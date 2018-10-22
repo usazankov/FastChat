@@ -11,6 +11,8 @@ public interface ICommLink {
     //class at on AsyncTask doInBackground
     public interface ICommLinkListener {
         public void messageReceived(String message);
+        public void onConnect();
+        public void onDisconnect();
         public void onError(Throwable e);
     }
 
