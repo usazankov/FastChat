@@ -27,16 +27,7 @@ public class AuthTest extends CommonTcp{
 
     @Test
     public void AuthRequestTest() throws Exception {
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                client.run();
-            }
-        });
-        thread.start();
-        blockOnEvent();
-        checkOnError();
+        run();
         assertFalse("Не принят ответ от хоста или ошибка десериализации объекта", resp == null);
         if(resp != null){
             assertFalse("Не успешный код ответа хоста на запрос авторизации", resp.getCodeResp() == "c_success");
@@ -51,27 +42,22 @@ public class AuthTest extends CommonTcp{
     }
 
     @Override
-    protected void onReceiveEvent(String message) {
-        super.onReceiveEvent(message);
+    protected boolean onReceiveEvent(String message) {
         resp = respJsonMapper.deserialize(message, AuthRespEntity.class);
+        return true;
     }
 
     @Override
-    protected void onConnectEvent() {
-        super.onConnectEvent();
+    protected boolean onConnectEvent() {
         AuthRequest req = createFakeAuthReq();
         sendData(req);
+        return true;
     }
 
     @Override
-    protected void onDisconnectEvent() {
-        super.onDisconnectEvent();
-        Log.d("AUTH", "disconnect");
+    protected boolean onDisconnectEvent() {
+        stop();
+        return true;
     }
 
-    @Override
-    protected void onErrorEvent(Throwable e) {
-        super.onErrorEvent(e);
-        AuthTest.this.e = e;
-    }
 }

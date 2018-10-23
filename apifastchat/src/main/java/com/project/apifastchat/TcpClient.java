@@ -69,7 +69,7 @@ public class TcpClient implements ICommLink{
                 while (mRun) {
                     if(m_msgSize < 0){
                         int av = in.available();
-                        if(av / 2 < 4)
+                        if(av < 4)
                             continue;
                         byte[] buff = new byte[4];
                         if(in.read(buff, 0, 4) < 4) continue;
@@ -77,7 +77,7 @@ public class TcpClient implements ICommLink{
                         m_msgSize = wrapped.getInt();
                     }else{
                         int av = in.available();
-                        if(av / 2 < m_msgSize)
+                        if(av < m_msgSize)
                             continue;
                         byte[] buff = new byte[m_msgSize];
                         in.read(buff, 0, m_msgSize);
@@ -113,7 +113,7 @@ public class TcpClient implements ICommLink{
         if (out != null && !out.checkError()) {
             byte[] bytes = ByteBuffer.allocate(4).putInt(str.length()).array();
             out.print(new String(bytes));
-            out.println(str);
+            out.print(str);
             if(out.checkError()){
                 stop();
             }

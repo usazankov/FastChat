@@ -2,10 +2,7 @@
   "id": "CheckConnectEntity",
   "description": "schema for CheckConnectEntity",
   "type": "object",
-  "properties":{
-    "Command_obj": {
-      "javaName": "command",
-      "$ref": "../Commons/Command.json"
-    }
+  "extends" : {
+    "$ref" : "../Commons/CommonResp.json"
   }
 }
