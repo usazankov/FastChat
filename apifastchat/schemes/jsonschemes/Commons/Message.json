@@ -6,6 +6,17 @@
 		"Message_body": {
 			"javaName": "body",
 			"type": "string"
+		},
+		"Message_date":{
+			"type":"string",
+			"javaName": "date",
+			"format": "date",
+			"customPattern" : "dd.MM.yyyy"
+		},
+		"Message_time":{
+			"javaName": "time",
+			"format": "time",
+			"customPattern" : "HH:mm"
 		}
 	}
 	

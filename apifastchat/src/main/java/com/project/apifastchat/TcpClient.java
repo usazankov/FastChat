@@ -1,12 +1,15 @@
 package com.project.apifastchat;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -27,7 +30,7 @@ public class TcpClient implements ICommLink{
     private ICommLinkListener mMessageListener;
     private boolean mRun = false;
     private int m_msgSize = -1;
-    private PrintWriter out;
+    private OutputStream out;
     private InputStream in;
     private String encoding = "UTF-8";
     private Socket socket;
@@ -58,7 +61,8 @@ public class TcpClient implements ICommLink{
             try {
 
                 //send the message to the server
-                out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+
+                out = socket.getOutputStream();
 
                 //receive the message which the server sends back
                 in = socket.getInputStream();
@@ -110,13 +114,13 @@ public class TcpClient implements ICommLink{
 
     @Override
     public void send(@NonNull String str) throws IOException {
-        if (out != null && !out.checkError()) {
-            byte[] bytes = ByteBuffer.allocate(4).putInt(str.length()).array();
-            out.print(new String(bytes));
-            out.print(str);
-            if(out.checkError()){
-                stop();
-            }
+        if (out != null) {
+            byte[] len = ByteBuffer.allocate(4).putInt(str.length()).array();
+            byte[] data = str.getBytes();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+            outputStream.write(len);
+            outputStream.write(data);
+            out.write(outputStream.toByteArray());
             out.flush();
         }
     }

@@ -2,11 +2,10 @@
   "id": "AuthReqEntity",
   "description": "schema for AuthReqEntity",
   "type": "object",
+  "extends" : {
+    "$ref" : "../Commons/CommonMsg.json"
+  },
   "properties":{
-    "Command_obj": {
-      "javaName": "command",
-      "$ref": "../Commons/Command.json"
-    },
     "User_id": {
       "javaName": "userId",
       "type": "string"

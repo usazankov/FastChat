@@ -3,6 +3,6 @@
   "description": "schema for CheckConnectEntity",
   "type": "object",
   "extends" : {
-    "$ref" : "../Commons/CommonResp.json"
+    "$ref" : "../Commons/CommonMsg.json"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "id": "UserList",
+  "description": "schema for UserList",
+  "type": "object",
+  "extends" : {
+    "$ref" : "../Commons/CommonMsg.json"
+  },
+  "properties":{
+    "Users_list": {
+      "javaName": "userList",
+      "type": "array",
+      "items": {
+        "$ref": "../Commons/User.json"
+      }
+    }
+  }
+}

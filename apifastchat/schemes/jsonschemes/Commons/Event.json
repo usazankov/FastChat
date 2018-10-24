@@ -1,0 +1,26 @@
+{
+  "id": "Event",
+  "description": "schema for Event",
+  "type": "object",
+  "properties":{
+    "Event_id": {
+      "javaName": "eventId",
+      "type": "string",
+      "default": "c_undefined",
+      "enum": [
+        "e_undefined",
+        "e_connect_user",
+        "e_disconnect_user",
+        "e_message",
+        "e_users_list"
+      ],
+      "javaEnumNames": [
+        "Undefined",
+        "ConnectUser",
+        "DisconnectUser",
+        "Message",
+        "UsersList"
+      ]
+    }
+  }
+}

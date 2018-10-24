@@ -1,8 +1,12 @@
 {
-  "id": "CommonResp",
-  "description": "schema for CommonResp",
+  "id": "CommonMsg",
+  "description": "schema for CommonMsg",
   "type": "object",
   "properties":{
+    "id_msg":{
+      "javaName": "id",
+      "type": "string"
+    },
     "Code_resp":{
       "javaName": "codeResp",
       "type": "string"
@@ -10,6 +14,10 @@
     "Command_obj": {
       "javaName": "command",
       "$ref": "../Commons/Command.json"
+    },
+    "Event_obj": {
+      "javaName": "event",
+      "$ref": "../Commons/Event.json"
     },
     "Date":{
       "type":"string",

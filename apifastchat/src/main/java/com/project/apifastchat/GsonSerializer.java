@@ -3,6 +3,8 @@ package com.project.apifastchat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.Type;
+
 public class GsonSerializer implements ISerializer{
 
     private final Gson gson;
@@ -17,7 +19,7 @@ public class GsonSerializer implements ISerializer{
      *
      * @param object to serialize.
      */
-    public synchronized String serialize(Object object, Class clazz) {
+    public synchronized String serialize(Object object, Type clazz) {
         return gson.toJson(object, clazz);
     }
 
@@ -26,7 +28,7 @@ public class GsonSerializer implements ISerializer{
      *
      * @param string A json string to deserialize.
      */
-    public synchronized <T> T deserialize(String string, Class<T> clazz) {
+    public synchronized <T> T deserialize(String string, Type clazz) {
         return gson.fromJson(string, clazz);
     }
 }
