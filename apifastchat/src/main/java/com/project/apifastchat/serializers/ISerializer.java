@@ -1,4 +1,4 @@
-package com.project.apifastchat;
+package com.project.apifastchat.serializers;
 
 import java.lang.reflect.Type;
 

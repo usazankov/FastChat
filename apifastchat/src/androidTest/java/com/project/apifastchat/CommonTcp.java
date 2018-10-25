@@ -1,6 +1,9 @@
 package com.project.apifastchat;
 
 import android.os.ConditionVariable;
+
+import com.project.apifastchat.net.ICommLink;
+import com.project.apifastchat.net.TcpClient;
 import com.project.apifastchat.requests.ARequest;
 
 

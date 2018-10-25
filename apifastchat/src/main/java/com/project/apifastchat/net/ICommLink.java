@@ -1,4 +1,4 @@
-package com.project.apifastchat;
+package com.project.apifastchat.net;
 
 import android.support.annotation.NonNull;
 
@@ -9,12 +9,17 @@ public interface ICommLink {
 
     //Declare the interface. The method messageReceived(String message) will must be implemented in the Activity
     //class at on AsyncTask doInBackground
-    public interface ICommLinkListener {
-        public void messageReceived(String message);
-        public void onConnect();
-        public void onDisconnect();
-        public void onError(Throwable e);
+    interface ICommLinkListener {
+        void messageReceived(String message);
+        void onConnect();
+        void onDisconnect();
+        void onError(Throwable e);
     }
+
+    /**
+     * Установить слушатель сообщений сокета
+     */
+    void setCommLinkListener(ICommLinkListener iCommLinkListener);
 
     /**
      * Возвращает true, если соединение установлено (или устанавливается в данный момент)

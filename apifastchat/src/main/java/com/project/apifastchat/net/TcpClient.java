@@ -1,31 +1,21 @@
-package com.project.apifastchat;
+package com.project.apifastchat.net;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class TcpClient implements ICommLink{
+public class TcpClient implements ICommLink {
 
-    public static final String SERVERIP = "10.35.90.162"; //your computer IP address
+    public static final String SERVERIP = "10.35.90.162";
     public static final int SERVERPORT = 1977;
     private ICommLinkListener mMessageListener;
     private boolean mRun = false;
@@ -37,8 +27,7 @@ public class TcpClient implements ICommLink{
     /**
      *  Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public TcpClient(ICommLinkListener listener) {
-        mMessageListener = listener;
+    public TcpClient() {
     }
 
 
@@ -67,7 +56,9 @@ public class TcpClient implements ICommLink{
                 //receive the message which the server sends back
                 in = socket.getInputStream();
 
-                if(socket.isConnected()) mMessageListener.onConnect();
+                if(socket.isConnected()) {
+                    if(mMessageListener != null) mMessageListener.onConnect();
+                }
 
                 //in this while the client listens for the messages sent by the server
                 while (mRun) {
@@ -86,7 +77,7 @@ public class TcpClient implements ICommLink{
                         byte[] buff = new byte[m_msgSize];
                         in.read(buff, 0, m_msgSize);
                         String value = new String(Arrays.copyOfRange(buff, 0, buff.length), encoding);
-                        mMessageListener.messageReceived(value);
+                        if(mMessageListener != null) mMessageListener.messageReceived(value);
                         m_msgSize = -1;
                     }
                 }
@@ -99,10 +90,10 @@ public class TcpClient implements ICommLink{
                 //the socket must be closed. It is not possible to reconnect to this socket
                 // after it is closed, which means a new socket instance has to be created.
                 socket.close();
-                mMessageListener.onDisconnect();
+                if(mMessageListener != null) mMessageListener.onDisconnect();
             }
         } catch (Exception e) {
-            mMessageListener.onError(e);
+            if(mMessageListener != null) mMessageListener.onError(e);
             Log.e("TCP", "C: Error", e);
         }
     }
@@ -123,6 +114,11 @@ public class TcpClient implements ICommLink{
             out.write(outputStream.toByteArray());
             out.flush();
         }
+    }
+
+    @Override
+    public void setCommLinkListener(ICommLinkListener iCommLinkListener) {
+        mMessageListener = iCommLinkListener;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.project.apifastchat.mappers;
 
-import com.project.apifastchat.GsonSerializer;
-import com.project.apifastchat.ISerializer;
+import com.project.apifastchat.serializers.GsonSerializer;
+import com.project.apifastchat.serializers.ISerializer;
 
 import java.lang.reflect.Type;
 

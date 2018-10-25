@@ -4,6 +4,8 @@ ext {
     gsonVersion = '2.8.5'
     javaxAnnotation = '10.0-b28'
     validationApiVersion = '1.1.0.CR2'
+    rxJavaVersion = '2.0.2'
+    rxAndroidVersion = '2.0.1'
 }
 
 buildscript {
@@ -45,6 +47,8 @@ dependencies {
     implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation "javax.validation:validation-api:${validationApiVersion}"
+    implementation "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}"
     testImplementation 'org.mockito:mockito-core:1.9.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

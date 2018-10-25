@@ -1,11 +1,12 @@
-package com.project.apifastchat;
+package com.project.apifastchat.serializers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.project.apifastchat.serializers.ISerializer;
 
 import java.lang.reflect.Type;
 
-public class GsonSerializer implements ISerializer{
+public class GsonSerializer implements ISerializer {
 
     private final Gson gson;
 
