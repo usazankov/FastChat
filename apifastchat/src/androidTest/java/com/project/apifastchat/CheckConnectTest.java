@@ -1,6 +1,5 @@
 package com.project.apifastchat;
 
-import android.os.SystemClock;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 

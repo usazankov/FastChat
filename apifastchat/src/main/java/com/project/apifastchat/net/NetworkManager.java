@@ -21,7 +21,9 @@ public class NetworkManager implements INerworkManager{
     private static ICommLink commLink;
     private static CommonJsonMapper mapper;
     private static final Map<String, String> hashResp = new HashMap<>();
-
+    private static IConnectStateListener stateListener;
+    private static ConnectState currentState = ConnectState.OFFLINE;
+    private static Thread thread;
     static ICommLink.ICommLinkListener listener = new ICommLink.ICommLinkListener() {
         @Override
         public void messageReceived(String message) {
@@ -37,12 +39,14 @@ public class NetworkManager implements INerworkManager{
 
         @Override
         public void onConnect() {
-
+            stateListener.onChangeState(ConnectState.ONLINE, currentState);
+            currentState = ConnectState.ONLINE;
         }
 
         @Override
         public void onDisconnect() {
-
+            stateListener.onChangeState(ConnectState.OFFLINE, currentState);
+            currentState = ConnectState.OFFLINE;
         }
 
         @Override
@@ -55,7 +59,7 @@ public class NetworkManager implements INerworkManager{
         commLink = comm;
         commLink.setCommLinkListener(listener);
         mapper = new CommonJsonMapper();
-        Thread thread = new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -65,7 +69,6 @@ public class NetworkManager implements INerworkManager{
                 }
             }
         });
-        thread.start();
     }
 
     @Override
@@ -74,8 +77,8 @@ public class NetworkManager implements INerworkManager{
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 boolean isConnect;
-                String req = request.createRequest();
                 synchronized (commLink) {
+                    String req = request.createRequest();
                     isConnect = commLink.isConnected();
                     if(isConnect)commLink.send(req);
                 }
@@ -84,7 +87,7 @@ public class NetworkManager implements INerworkManager{
                     return;
                 }
 
-                SystemClock.sleep(2000);
+                //SystemClock.sleep(2000);
                 String resp = "";
                 while (true) {
                     synchronized (hashResp) {
@@ -107,7 +110,17 @@ public class NetworkManager implements INerworkManager{
     }
 
     @Override
+    public void start() {
+        thread.start();
+    }
+
+    @Override
     public void setEventListener(IEventListener eventListener) {
         this.eventListener = eventListener;
+    }
+
+    @Override
+    public void setConnectStateListener(IConnectStateListener connectStateListener) {
+        this.stateListener = connectStateListener;
     }
 }
