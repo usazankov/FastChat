@@ -3,10 +3,12 @@ package com.project.apifastchat.requests;
 import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.mappers.CommonJsonMapper;
 
+import java.util.Random;
+
 public abstract class ARequest {
 
     private String msgId;
-
+    private static final int MAX_RANDOM = Integer.MAX_VALUE;
     CommonJsonMapper jsonMapper;
 
     public ARequest(){
@@ -20,7 +22,9 @@ public abstract class ARequest {
     }
 
     private String generateUniqId(CommonMsg msg){
-        return "111";
+        Random r = new Random();
+        int i = r.nextInt(MAX_RANDOM);
+        return String.valueOf(i);
     }
 
     public String toDataRequest(Object object, Class clazz){

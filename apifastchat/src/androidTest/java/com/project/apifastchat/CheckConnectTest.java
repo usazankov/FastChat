@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 public class CheckConnectTest extends CommonTcp{
     CommonJsonMapper mapper;
     int count = 0;
-    int max_count = 1;
+    int max_count = 10;
     @Before
     public void init(){
         setUp();

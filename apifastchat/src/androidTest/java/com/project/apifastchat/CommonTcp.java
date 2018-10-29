@@ -17,7 +17,8 @@ public abstract class CommonTcp {
     protected final ConditionVariable cv = new ConditionVariable();
 
     public void setUp(){
-        client = new TcpClient(new ICommLink.ICommLinkListener() {
+        client = new TcpClient();
+        client.setCommLinkListener(new ICommLink.ICommLinkListener() {
             @Override
             public void messageReceived(String message) {
                 if(onReceiveEvent(message)) cv.open();
