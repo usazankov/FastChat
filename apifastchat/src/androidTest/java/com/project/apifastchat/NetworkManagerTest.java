@@ -34,7 +34,7 @@ public class NetworkManagerTest {
     private INerworkManager networkManager;
     private CommonJsonMapper mapper;
     int count = 0;
-    int max_count = 1000;
+    int max_count = 10000;
     protected final ConditionVariable cv = new ConditionVariable();
     @Before
     public void init(){
@@ -53,34 +53,41 @@ public class NetworkManagerTest {
             @Override
             public void onChangeState(INerworkManager.ConnectState stateNew, INerworkManager.ConnectState stateOld) {
                 if(stateNew == INerworkManager.ConnectState.ONLINE){
-                    for(int i = 0; i < max_count; i++)
-                    networkManager.executeRequest(new CheckConnectRequest())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<String>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i = 0; i < max_count; i++)
+                                networkManager.executeRequest(new CheckConnectRequest())
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(Schedulers.io())
+                                        .subscribe(new Observer<String>() {
+                                            @Override
+                                            public void onSubscribe(Disposable d) {
 
-                                }
+                                            }
 
-                                @Override
-                                public void onNext(String value) {
-                                    CommonMsg msg = mapper.deserialize(value, CommonMsg.class);
-                                    Log.d("NetworkManager", msg.toString());
-                                    count++;
-                                    if(count == max_count) cv.open();
-                                }
+                                            @Override
+                                            public void onNext(String value) {
+                                                CommonMsg msg = mapper.deserialize(value, CommonMsg.class);
+                                                Log.d("NetworkManager", msg.toString());
+                                                count++;
+                                                if(count == max_count) cv.open();
+                                            }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    cv.open();
-                                }
+                                            @Override
+                                            public void onError(Throwable e) {
+                                                cv.open();
+                                            }
 
-                                @Override
-                                public void onComplete() {
-                                    //cv.open();
-                                }
-                            });
+                                            @Override
+                                            public void onComplete() {
+                                                //cv.open();
+                                            }
+                                        });
+                        }
+
+                    });
+                    thread.start();
 
                 }
             }

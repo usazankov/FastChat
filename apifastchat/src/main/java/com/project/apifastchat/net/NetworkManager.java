@@ -90,6 +90,7 @@ public class NetworkManager implements INerworkManager{
                 //SystemClock.sleep(2000);
                 String resp = "";
                 while (true) {
+                    SystemClock.sleep(500);
                     synchronized (hashResp) {
                         if (!hashResp.containsKey(request.getMsgId())) continue;
                         resp = hashResp.get(request.getMsgId());
