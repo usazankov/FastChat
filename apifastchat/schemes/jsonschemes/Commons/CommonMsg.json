@@ -9,7 +9,7 @@
     },
     "Code_resp":{
       "javaName": "codeResp",
-      "type": "string"
+      "$ref": "../Commons/CodeResp.json"
     },
     "Command_obj": {
       "javaName": "command",
@@ -31,5 +31,4 @@
       "customPattern" : "HH:mm"
     }
   }
-
 }

@@ -3,6 +3,8 @@ package com.project.apifastchat.net;
 import com.project.apifastchat.entity.Event;
 import com.project.apifastchat.requests.ARequest;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 
@@ -14,14 +16,19 @@ public interface INerworkManager {
     Observable<String> executeRequest(ARequest request);
 
     /**
-     *  Есть ли соединение с сервером
+     *  Запросы на сервер
      */
-    boolean isConnected();
+    Observable<String> executeRequest(List<ARequest> request);
 
     /**
-     *  Запустить
+     *  Узнать текущее состояние соединения
      */
-    void start();
+    ConnectState getCurrentState();
+
+    /**
+     * Установить клиента соединений
+     */
+    void setCommLink(ICommLink commLink);
 
     /**
      * Установить слушателя событий от сервера
@@ -32,6 +39,7 @@ public interface INerworkManager {
      * Установить слушателя состояния соединения
      */
     void setConnectStateListener(IConnectStateListener connectStateListener);
+
     /**
      * Интерфейс слушателя событий от сервера
      */
@@ -43,10 +51,10 @@ public interface INerworkManager {
      * Интерфейс слушателя состояния соединения
      */
     interface IConnectStateListener{
-        void onChangeState(ConnectState stateNew, ConnectState stateOld);
+        void onChangeState(ConnectState stateNew);
     }
 
-    public enum ConnectState{
+    enum ConnectState{
         UNDEFINED,
         CONNECTING,
         ONLINE,

@@ -1,0 +1,7 @@
+{
+  "id": "CodeResp",
+  "type": "string",
+  "default": "c_error",
+  "enum": ["c_success", "c_error"],
+  "javaEnumNames": ["Success","Error"]
+}

@@ -3,6 +3,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.project.apifastchat.entity.AuthRespEntity;
+import com.project.apifastchat.entity.CodeResp;
 import com.project.apifastchat.mappers.AuthRespJsonMapper;
 import com.project.apifastchat.requests.AuthRequest;
 
@@ -30,7 +31,7 @@ public class AuthTest extends CommonTcp{
         run();
         assertFalse("Не принят ответ от хоста или ошибка десериализации объекта", resp == null);
         if(resp != null){
-            assertFalse("Не успешный код ответа хоста на запрос авторизации", resp.getCodeResp() == "c_success");
+            assertFalse("Не успешный код ответа хоста на запрос авторизации", resp.getCode_resp() == CodeResp.Success);
         }
     }
 

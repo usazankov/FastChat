@@ -1,4 +1,7 @@
 package com.project.apifastchat.net;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -15,8 +18,8 @@ import java.util.Arrays;
 
 public class TcpClient implements ICommLink {
 
-    public static final String SERVERIP = "192.168.1.104";
-    public static final int SERVERPORT = 1977;
+    public static final String SERVERIP = "10.35.90.162";
+    public static final int SERVERPORT = 1979;
     private ICommLinkListener mMessageListener;
     private boolean mRun = false;
     private int m_msgSize = -1;
@@ -24,10 +27,12 @@ public class TcpClient implements ICommLink {
     private InputStream in;
     private String encoding = "UTF-8";
     private Socket socket;
+    private Context ctx;
     /**
      *  Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public TcpClient() {
+    public TcpClient(Context appContext) {
+        ctx = appContext;
     }
 
 
@@ -104,15 +109,20 @@ public class TcpClient implements ICommLink {
     }
 
     @Override
-    public void send(@NonNull String str) throws IOException {
+    public void send(@NonNull String str){
         if (out != null) {
             byte[] len = ByteBuffer.allocate(4).putInt(str.length()).array();
             byte[] data = str.getBytes();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-            outputStream.write(len);
-            outputStream.write(data);
-            out.write(outputStream.toByteArray());
-            out.flush();
+            try {
+                outputStream.write(len);
+                outputStream.write(data);
+                out.write(outputStream.toByteArray());
+                out.flush();
+            }catch (IOException e){
+                e.printStackTrace();
+                mRun = false;
+            }
         }
     }
 
@@ -123,7 +133,13 @@ public class TcpClient implements ICommLink {
 
     @Override
     public boolean isConnected() {
-        return true;
+        boolean isConnected;
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) this.ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager == null) return true;
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = (networkInfo != null && networkInfo.isConnected());
+        return isConnected;
     }
 
     @Override

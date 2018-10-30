@@ -1,6 +1,8 @@
 package com.project.apifastchat;
 
+import android.content.Context;
 import android.os.ConditionVariable;
+import android.support.test.InstrumentationRegistry;
 
 import com.project.apifastchat.net.ICommLink;
 import com.project.apifastchat.net.TcpClient;
@@ -17,7 +19,8 @@ public abstract class CommonTcp {
     protected final ConditionVariable cv = new ConditionVariable();
 
     public void setUp(){
-        client = new TcpClient();
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        client = new TcpClient(appContext);
         client.setCommLinkListener(new ICommLink.ICommLinkListener() {
             @Override
             public void messageReceived(String message) {
@@ -59,11 +62,7 @@ public abstract class CommonTcp {
     }
 
     protected void sendData(ARequest req){
-        try {
-            if(client != null) client.send(req.createRequest());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if(client != null) client.send(req.getDataRequest());
     }
 
     protected void blockOnEvent(){

@@ -2,6 +2,7 @@ package com.project.apifastchat;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import com.project.apifastchat.entity.CodeResp;
 import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.mappers.CommonJsonMapper;
 import com.project.apifastchat.requests.MessageRequest;
@@ -26,7 +27,7 @@ public class MessageTest extends CommonTcp {
     @Test
     public void getUsersListTest(){
         run();
-        assertFalse("Нет кода ответа или код ответа не успешный", !resp.getCodeResp().equals("c_success"));
+        assertFalse("Нет кода ответа или код ответа не успешный", resp.getCode_resp() != CodeResp.Success);
 
     }
 
