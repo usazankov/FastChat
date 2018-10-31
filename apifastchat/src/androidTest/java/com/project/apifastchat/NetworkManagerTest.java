@@ -2,11 +2,13 @@ package com.project.apifastchat;
 
 import android.content.Context;
 import android.os.ConditionVariable;
+import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.project.apifastchat.entity.CodeResp;
+import com.project.apifastchat.entity.Command;
 import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.mappers.CommonJsonMapper;
 import com.project.apifastchat.mappers.UsersJsonMapper;
@@ -15,6 +17,7 @@ import com.project.apifastchat.net.NetworkManager;
 import com.project.apifastchat.net.TcpClient;
 import com.project.apifastchat.requests.ARequest;
 import com.project.apifastchat.requests.CheckConnectRequest;
+import com.project.apifastchat.requests.MessageRequest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +44,8 @@ public class NetworkManagerTest {
     private Throwable error;
     private int count = 0;
     private int max_count = 1000;
+    private int timeout = 35000;
+    INerworkManager.ConnectState state;
     private final ConditionVariable cv = new ConditionVariable();
 
     @Before
@@ -53,6 +58,15 @@ public class NetworkManagerTest {
         networkManager = NetworkManager.getInstance();
         networkManager.setCommLink(new TcpClient(appContext));
         mapper = new CommonJsonMapper();
+    }
+
+    private MessageRequest createMessageRequest(){
+        return MessageRequest.newBuilder()
+                .setUserIdFrom("test_user")
+                .setMessageBody("Hello world!")
+                .setTimeMessage("18:31")
+                .setDateMessage("24.10.2018")
+                .build();
     }
 
     @Test
@@ -115,6 +129,7 @@ public class NetworkManagerTest {
 
                     @Override
                     public void onError(Throwable e) {
+                        error = e;
                         cv.open();
                     }
 
@@ -128,11 +143,64 @@ public class NetworkManagerTest {
         assertTrue("Запросы не выполнены", count == max_count);
     }
 
+    @Test
+    public void TestCase3(){
+        count = 0;
+        timeout = 6000000;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i = 0; i < 1; i++){
+                    networkManager.executeRequest(createMessageRequest())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<String>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(String value) {
+                                    CommonMsg msg = mapper.deserialize(value, CommonMsg.class);
+                                    if(msg != null){
+                                        count++;
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                    SystemClock.sleep(1000);
+                }
+
+
+            }
+        });
+        state = networkManager.getCurrentState();
+        networkManager.setConnectStateListener(new INerworkManager.IConnectStateListener() {
+            @Override
+            public void onChangeState(INerworkManager.ConnectState stateNew) {
+                state = stateNew;
+            }
+        });
+        thread.start();
+        blockOnEvent();
+        checkOnError();
+    }
+
     protected void checkOnError(){
         assertFalse(error == null ? "" : error.getMessage(), error != null);
     }
 
     protected void blockOnEvent(){
-        assertFalse("Таймаут приема данных", !cv.block(35000));
+        assertFalse("Таймаут приема данных", !cv.block(timeout));
     }
 }

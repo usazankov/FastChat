@@ -5,10 +5,12 @@ import android.os.ConditionVariable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
+import com.project.apifastchat.Consts;
 import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.exceptions.NetworkException;
 import com.project.apifastchat.mappers.CommonJsonMapper;
 import com.project.apifastchat.requests.ARequest;
+import com.project.apifastchat.requests.CheckConnectRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -27,7 +31,6 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
 public class NetworkManager implements INerworkManager{
-
     private IEventListener eventListener;
     private ICommLink commLink;
     private CommonJsonMapper mapper;
@@ -38,6 +41,8 @@ public class NetworkManager implements INerworkManager{
     private final int timeout_recv = 30000;
     private final int timeout_connect = 30000;
     private static NetworkManager instance;
+    private Timer timerCheckConnect;
+
     private ExecutorService backgroundExecutor = Executors.newFixedThreadPool(8, new ThreadFactory() {
         @Override
         public Thread newThread(@NonNull Runnable runnable) {
@@ -67,7 +72,7 @@ public class NetworkManager implements INerworkManager{
             CommonMsg msg = mapper.deserialize(message, CommonMsg.class);
             if(msg.getCommand_obj() != null && msg.getCommand_obj().getCommandId() != null){
                 synchronized (hashResp){
-                    hashResp.put(msg.getId(), message);
+                    if(msg.getId() != null && msg.getId().length() > 0) hashResp.put(msg.getId(), message);
                 }
             }else if(msg.getEvent_obj() != null && msg.getEvent_obj().getEventId() != null){
                 eventListener.onEvent(msg.getEvent_obj().getEventId(), message);
@@ -76,14 +81,14 @@ public class NetworkManager implements INerworkManager{
 
         @Override
         public void onConnect() {
-            if(stateListener != null) stateListener.onChangeState(ConnectState.ONLINE);
             currentState = ConnectState.ONLINE;
+            if(stateListener != null) stateListener.onChangeState(ConnectState.ONLINE);
         }
 
         @Override
         public void onDisconnect() {
-            if(stateListener != null) stateListener.onChangeState(ConnectState.OFFLINE);
             currentState = ConnectState.OFFLINE;
+            if(stateListener != null) stateListener.onChangeState(ConnectState.OFFLINE);
         }
 
         @Override
@@ -109,22 +114,56 @@ public class NetworkManager implements INerworkManager{
 
     private NetworkManager(){
         mapper = new CommonJsonMapper();
+        timerCheckConnect = new Timer(true);
+        timerCheckConnect.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                connectIfPossible();
+            }
+        },1000, timeout_connect + 3000);
+    }
 
+    private class ProcessingNet implements Runnable{
+        private Timer timer;
+        private PeriodicSendCheck timerTask;
+
+        @Override
+        public void run() {
+            try {
+                runInBackground(new Runnable() {
+                    @Override
+                    public void run() {
+                        timer = new Timer(true);
+                        timerTask = new PeriodicSendCheck();
+                        timer.schedule(timerTask, 0, 5000);
+                    }
+                });
+                commLink.run();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(timer != null) timer.cancel();
+            }
+        }
+
+        class PeriodicSendCheck extends TimerTask{
+            @Override
+            public void run() {
+                if(currentState == ConnectState.ONLINE){
+                    ARequest req = new CheckConnectRequest();
+                    req.setMsgId(Consts.NO_MSG_ID);
+                    send(req);
+                }
+            }
+        }
     }
 
     private boolean connectIfPossible(){
-        if(!commLink.isConnected()) return false;
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    commLink.run();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+        if(commLink == null || !commLink.isConnected()) return false;
+        if(thread == null || !thread.isAlive()){
+            thread = new Thread(new ProcessingNet());
+            thread.start();
+        }
         long currentTick = System.currentTimeMillis();
         while (currentState != ConnectState.ONLINE){
             if((System.currentTimeMillis() - currentTick) >= timeout_connect){
@@ -140,8 +179,13 @@ public class NetworkManager implements INerworkManager{
         return false;
     }
 
+    private void reset(){
+        currentState = ConnectState.OFFLINE;
+    }
+
     @Override
     public void setCommLink(ICommLink comm){
+        reset();
         commLink = comm;
         commLink.setCommLinkListener(listener);
     }

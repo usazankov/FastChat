@@ -14,17 +14,9 @@ public abstract class ARequest {
     private static final int MAX_RANDOM = Integer.MAX_VALUE;
     private CommonJsonMapper jsonMapper;
     private String data;
-
     public ARequest(){
         jsonMapper = new CommonJsonMapper();
         data = createRequest();
-    }
-
-    private static String byteArrayToHex(byte[] a) {
-        StringBuilder sb = new StringBuilder(a.length * 2);
-        for(byte b: a)
-            sb.append(String.format("%02x", b));
-        return sb.toString();
     }
 
     protected abstract String createRequest();
@@ -37,18 +29,24 @@ public abstract class ARequest {
         return msgId;
     }
 
+    public void setMsgId(String msgId){
+        this.msgId = msgId;
+        data = createRequest();
+    }
+
     private String generateUniqId(CommonMsg msg){
         Random r = new Random();
         int i = r.nextInt(MAX_RANDOM);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSS");
         String currentDateandTime = sdf.format(new Date());
-        String str = String.valueOf(i) + currentDateandTime;
-        return str;
+        return String.valueOf(i) + currentDateandTime;
     }
 
     protected String toDataRequest(Object object, Class clazz){
         if(object instanceof CommonMsg){
-            msgId = generateUniqId((CommonMsg)object);
+            if(msgId == null || msgId.length() == 0){
+                msgId = generateUniqId((CommonMsg)object);
+            }
             ((CommonMsg)object).setId(msgId);
         }
         return jsonMapper.serialize(object, clazz);
