@@ -8,5 +8,9 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface IUserDataStore {
+
     Observable<List<User>> getUsersList(UserListRequest userListRequest);
+
+    Observable<User> getUserInfo(UserListRequest userListRequest);
+
 }

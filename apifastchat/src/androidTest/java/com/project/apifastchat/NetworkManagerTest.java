@@ -146,7 +146,7 @@ public class NetworkManagerTest {
     @Test
     public void TestCase3(){
         count = 0;
-        timeout = 6000000;
+        timeout = 999999999;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
