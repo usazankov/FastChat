@@ -11,7 +11,8 @@ public class MessageRequest extends ARequest {
     private String timeMsg;
     private MessageRequest(){
     }
-    
+
+    @Override
     public String createRequest() {
         MessageReqEntity req = new MessageReqEntity();
         Command com = new Command();

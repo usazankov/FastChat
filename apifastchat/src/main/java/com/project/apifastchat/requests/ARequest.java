@@ -13,16 +13,15 @@ public abstract class ARequest {
     private String msgId;
     private static final int MAX_RANDOM = Integer.MAX_VALUE;
     private CommonJsonMapper jsonMapper;
-    private String data;
     public ARequest(){
         jsonMapper = new CommonJsonMapper();
-        data = createRequest();
+        msgId = generateUniqId();
     }
 
     protected abstract String createRequest();
 
     public String getDataRequest(){
-        return data;
+        return createRequest();
     }
 
     public String getMsgId() {
@@ -31,10 +30,9 @@ public abstract class ARequest {
 
     public void setMsgId(String msgId){
         this.msgId = msgId;
-        data = createRequest();
     }
 
-    private String generateUniqId(CommonMsg msg){
+    private String generateUniqId(){
         Random r = new Random();
         int i = r.nextInt(MAX_RANDOM);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSS");
@@ -44,9 +42,6 @@ public abstract class ARequest {
 
     protected String toDataRequest(Object object, Class clazz){
         if(object instanceof CommonMsg){
-            if(msgId == null || msgId.length() == 0){
-                msgId = generateUniqId((CommonMsg)object);
-            }
             ((CommonMsg)object).setId(msgId);
         }
         return jsonMapper.serialize(object, clazz);
