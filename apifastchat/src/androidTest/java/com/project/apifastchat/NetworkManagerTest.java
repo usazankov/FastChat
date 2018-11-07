@@ -142,8 +142,8 @@ public class NetworkManagerTest {
         assertTrue("Запросы не выполнены", count == max_count);
     }
 
-    @Test
-    public void TestCase3(){
+    //@Test
+    private void TestCase3(){
         count = 0;
         timeout = 999999999;
         Thread thread = new Thread(new Runnable() {

@@ -1,6 +1,7 @@
 package com.project.apifastchat;
 
 import com.project.apifastchat.entity.AuthRespEntity;
+import com.project.apifastchat.entity.CodeResp;
 import com.project.apifastchat.entity.Command;
 import com.project.apifastchat.mappers.AuthRespJsonMapper;
 
@@ -35,7 +36,7 @@ public class AuthRespJsonMapperTest {
     @Test
     public void testTransformAuthResp(){
         AuthRespEntity resp = respJsonMapper.getAuthResponse(jsonAuthResp);
-        assertThat(resp.getCodeResp(), is(equalTo("c_success")));
+        assertThat(resp.getCode_resp(), is(equalTo(CodeResp.Success)));
         assertThat(resp.getCommand_obj().getCommandId(), is(equalTo(Command.CommandId.Auth)));
         assertThat(resp.getDate(), is(equalTo("18.10.2018")));
         assertThat(resp.getTime(), is(equalTo("17:53")));

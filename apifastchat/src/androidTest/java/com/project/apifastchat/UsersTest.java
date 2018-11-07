@@ -29,6 +29,7 @@ public class UsersTest extends CommonTcp {
         testList.add("user1");
         testList.add("user2");
         testList.add("user3");
+        testList.add("Test_user");
         usersJsonMapper = new UsersJsonMapper();
     }
 
