@@ -1,10 +1,9 @@
 package com.project.apifastchat.stores;
 
-import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.entity.Event;
 import com.project.apifastchat.entity.User;
 import com.project.apifastchat.mappers.CommonJsonMapper;
-import com.project.apifastchat.net.INerworkManager;
+import com.project.apifastchat.net.INetworkManager;
 import com.project.apifastchat.stores.interfaces.IEventDataStore;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class EventDataStore extends CommonDataStore implements IEventDataStore{
         String data;
     }
 
-    public EventDataStore(INerworkManager nerworkManager, CommonJsonMapper mapper){
+    public EventDataStore(INetworkManager nerworkManager, CommonJsonMapper mapper){
         super(nerworkManager);
         this.mapper = mapper;
     }
@@ -34,7 +33,7 @@ public class EventDataStore extends CommonDataStore implements IEventDataStore{
         return Observable.create(new ObservableOnSubscribe<EventData>() {
             @Override
             public void subscribe(final ObservableEmitter<EventData> e) throws Exception {
-                networkManager.setEventListener(new INerworkManager.IEventListener() {
+                networkManager.setEventListener(new INetworkManager.IEventListener() {
 
                     @Override
                     public void onEvent(Event.EventId eventId, String data) {
@@ -49,14 +48,15 @@ public class EventDataStore extends CommonDataStore implements IEventDataStore{
                 .share();
     }
 
-    Observable<INerworkManager.ConnectState> getConnectState(){
-        return Observable.create(new ObservableOnSubscribe<INerworkManager.ConnectState>() {
+    @Override
+    public Observable<INetworkManager.ConnectState> getConnectState(){
+        return Observable.create(new ObservableOnSubscribe<INetworkManager.ConnectState>() {
             @Override
-            public void subscribe(final ObservableEmitter<INerworkManager.ConnectState> e) throws Exception {
+            public void subscribe(final ObservableEmitter<INetworkManager.ConnectState> e) throws Exception {
                 e.onNext(networkManager.getCurrentState());
-                networkManager.setConnectStateListener(new INerworkManager.IConnectStateListener() {
+                networkManager.setConnectStateListener(new INetworkManager.IConnectStateListener() {
                     @Override
-                    public void onChangeState(INerworkManager.ConnectState stateNew) {
+                    public void onChangeState(INetworkManager.ConnectState stateNew) {
                         e.onNext(stateNew);
                     }
                 });

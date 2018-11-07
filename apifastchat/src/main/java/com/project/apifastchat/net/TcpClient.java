@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class TcpClient implements ICommLink {
 
-    public static final String SERVERIP = "10.35.90.162";
+    public static final String SERVERIP = "192.168.1.104";
     public static final int SERVERPORT = 1979;
     private ICommLinkListener mMessageListener;
     private boolean mRun = false;

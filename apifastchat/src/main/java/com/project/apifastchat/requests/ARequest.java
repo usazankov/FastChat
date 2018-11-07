@@ -43,6 +43,7 @@ public abstract class ARequest {
     protected String toDataRequest(Object object, Class clazz){
         if(object instanceof CommonMsg){
             ((CommonMsg)object).setId(msgId);
+            ((CommonMsg)object).setCode_resp(null);
         }
         return jsonMapper.serialize(object, clazz);
     }

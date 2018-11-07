@@ -8,11 +8,9 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.project.apifastchat.entity.CodeResp;
-import com.project.apifastchat.entity.Command;
 import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.mappers.CommonJsonMapper;
-import com.project.apifastchat.mappers.UsersJsonMapper;
-import com.project.apifastchat.net.INerworkManager;
+import com.project.apifastchat.net.INetworkManager;
 import com.project.apifastchat.net.NetworkManager;
 import com.project.apifastchat.net.TcpClient;
 import com.project.apifastchat.requests.ARequest;
@@ -26,12 +24,9 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.junit.Assert.assertFalse;
@@ -39,13 +34,13 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class NetworkManagerTest {
-    private INerworkManager networkManager;
+    private INetworkManager networkManager;
     private CommonJsonMapper mapper;
     private Throwable error;
     private int count = 0;
     private int max_count = 1000;
     private int timeout = 35000;
-    INerworkManager.ConnectState state;
+    INetworkManager.ConnectState state;
     private final ConditionVariable cv = new ConditionVariable();
 
     @Before
@@ -184,9 +179,9 @@ public class NetworkManagerTest {
             }
         });
         state = networkManager.getCurrentState();
-        networkManager.setConnectStateListener(new INerworkManager.IConnectStateListener() {
+        networkManager.setConnectStateListener(new INetworkManager.IConnectStateListener() {
             @Override
-            public void onChangeState(INerworkManager.ConnectState stateNew) {
+            public void onChangeState(INetworkManager.ConnectState stateNew) {
                 state = stateNew;
             }
         });

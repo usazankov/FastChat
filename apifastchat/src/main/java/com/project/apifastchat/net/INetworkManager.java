@@ -8,7 +8,7 @@ import java.util.List;
 import io.reactivex.Observable;
 
 
-public interface INerworkManager {
+public interface INetworkManager {
 
     /**
      *  Запрос на сервер

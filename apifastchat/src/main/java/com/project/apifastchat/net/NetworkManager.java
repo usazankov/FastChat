@@ -1,7 +1,5 @@
 package com.project.apifastchat.net;
 
-import android.content.Context;
-import android.os.ConditionVariable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
@@ -13,8 +11,6 @@ import com.project.apifastchat.requests.ARequest;
 import com.project.apifastchat.requests.CheckConnectRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +26,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
-public class NetworkManager implements INerworkManager{
+public class NetworkManager implements INetworkManager {
     private IEventListener eventListener;
     private ICommLink commLink;
     private CommonJsonMapper mapper;
@@ -200,6 +196,11 @@ public class NetworkManager implements INerworkManager{
                         e.onError(new NetworkException());
                         return;
                     }
+
+                    if(currentState != ConnectState.ONLINE){
+                        e.onError(new NetworkException());
+                        return;
+                    }
                     SystemClock.sleep(300);
                     synchronized (hashResp) {
                         if (!hashResp.containsKey(request.getMsgId())) continue;
@@ -266,6 +267,10 @@ public class NetworkManager implements INerworkManager{
                                 }
                             }
                         }
+                        e.onError(new NetworkException());
+                        return;
+                    }
+                    if(currentState != ConnectState.ONLINE){
                         e.onError(new NetworkException());
                         return;
                     }

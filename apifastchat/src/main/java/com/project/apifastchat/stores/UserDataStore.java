@@ -2,7 +2,7 @@ package com.project.apifastchat.stores;
 
 import com.project.apifastchat.entity.User;
 import com.project.apifastchat.mappers.UsersJsonMapper;
-import com.project.apifastchat.net.INerworkManager;
+import com.project.apifastchat.net.INetworkManager;
 import com.project.apifastchat.requests.UserListRequest;
 import com.project.apifastchat.stores.interfaces.IUserDataStore;
 
@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers;
 public class UserDataStore extends CommonDataStore implements IUserDataStore {
     private UsersJsonMapper mapper;
 
-    public UserDataStore(INerworkManager nerworkManager, UsersJsonMapper mapper){
+    public UserDataStore(INetworkManager nerworkManager, UsersJsonMapper mapper){
         super(nerworkManager);
         this.mapper = mapper;
     }
