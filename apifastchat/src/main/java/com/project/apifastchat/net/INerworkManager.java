@@ -26,11 +26,6 @@ public interface INerworkManager {
     ConnectState getCurrentState();
 
     /**
-     * Установить клиента соединений
-     */
-    void setCommLink(ICommLink commLink);
-
-    /**
      * Установить слушателя событий от сервера
      */
     void setEventListener(IEventListener eventListener);

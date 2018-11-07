@@ -24,7 +24,7 @@ public class AuthDataStore extends CommonDataStore implements IAuthDataStore{
 
     @Override
     public Observable<AuthRespEntity> doAuthentication(AuthRequest authRequest) {
-        return nerworkManager.executeRequest(authRequest)
+        return networkManager.executeRequest(authRequest)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<String, AuthRespEntity>() {
                     @Override

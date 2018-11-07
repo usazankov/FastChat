@@ -55,8 +55,7 @@ public class NetworkManagerTest {
 
     private void setUp(){
         Context appContext = InstrumentationRegistry.getTargetContext();
-        networkManager = NetworkManager.getInstance();
-        networkManager.setCommLink(new TcpClient(appContext));
+        networkManager = new NetworkManager(new TcpClient(appContext));
         mapper = new CommonJsonMapper();
     }
 

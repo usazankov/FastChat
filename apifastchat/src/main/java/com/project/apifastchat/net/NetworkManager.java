@@ -40,7 +40,6 @@ public class NetworkManager implements INerworkManager{
     private Thread thread;
     private final int timeout_recv = 30000;
     private final int timeout_connect = 30000;
-    private static NetworkManager instance;
     private Timer timerCheckConnect;
 
     private ExecutorService backgroundExecutor = Executors.newFixedThreadPool(8, new ThreadFactory() {
@@ -57,15 +56,6 @@ public class NetworkManager implements INerworkManager{
         backgroundExecutor.submit(runnable);
     }
 
-    public static synchronized NetworkManager getInstance() {
-        if (instance == null) {
-            synchronized (NetworkManager.class) {
-                instance = new NetworkManager();
-            }
-        }
-        return instance;
-    }
-
     private ICommLink.ICommLinkListener listener = new ICommLink.ICommLinkListener() {
         @Override
         public void messageReceived(String message) {
@@ -75,7 +65,8 @@ public class NetworkManager implements INerworkManager{
                     if(msg.getId() != null && msg.getId().length() > 0) hashResp.put(msg.getId(), message);
                 }
             }else if(msg.getEvent_obj() != null && msg.getEvent_obj().getEventId() != null){
-                eventListener.onEvent(msg.getEvent_obj().getEventId(), message);
+                if(eventListener != null)
+                    eventListener.onEvent(msg.getEvent_obj().getEventId(), message);
             }
         }
 
@@ -112,8 +103,10 @@ public class NetworkManager implements INerworkManager{
         });
     }
 
-    private NetworkManager(){
+    public NetworkManager(ICommLink commLink){
+        this.commLink = commLink;
         mapper = new CommonJsonMapper();
+        commLink.setCommLinkListener(listener);
         timerCheckConnect = new Timer(true);
         timerCheckConnect.schedule(new TimerTask() {
             @Override
@@ -184,13 +177,6 @@ public class NetworkManager implements INerworkManager{
     }
 
     @Override
-    public void setCommLink(ICommLink comm){
-        reset();
-        commLink = comm;
-        commLink.setCommLinkListener(listener);
-    }
-
-    @Override
     public Observable<String> executeRequest(final ARequest request) {
         return Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -206,7 +192,7 @@ public class NetworkManager implements INerworkManager{
                     return;
                 }
 
-                if(flagConnect)send(request);
+                send(request);
                 long currentTick = System.currentTimeMillis();
                 String resp = "";
                 while (true) {

@@ -6,7 +6,7 @@ import com.project.apifastchat.net.INerworkManager;
 
 public class CommonDataStore {
 
-    protected INerworkManager nerworkManager;
+    protected INerworkManager networkManager;
     public CommonDataStore(INerworkManager nerworkManager){
 
     }
