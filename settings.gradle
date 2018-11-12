@@ -1,1 +1,1 @@
-include ':app', ':apifastchat'
+include ':app', ':apifastchat', ':data', ':domain'
