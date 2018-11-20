@@ -33,11 +33,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':domain')
-    compile project(':apifastchat')
+    api project(':domain')
+    api project(':apifastchat')
     implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.github.lowlevel-studios:storo:1.2.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:${assertJVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
