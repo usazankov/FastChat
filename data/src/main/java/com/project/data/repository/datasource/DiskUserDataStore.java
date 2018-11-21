@@ -3,16 +3,16 @@ package com.project.data.repository.datasource;
 import com.project.apifastchat.entity.User;
 import com.project.apifastchat.requests.UserListRequest;
 import com.project.apifastchat.stores.interfaces.IUserDataStore;
-import com.project.data.cache.IUserCache;
-
+import com.project.data.cache.ICacheManager;
 import java.util.List;
-
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 public class DiskUserDataStore implements IUserDataStore{
-    private IUserCache userCache;
-    public DiskUserDataStore(IUserCache userCache){
-        this.userCache = userCache;
+    private ICacheManager cacheManager;
+    public DiskUserDataStore(ICacheManager cacheManager){
+        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -21,7 +21,18 @@ public class DiskUserDataStore implements IUserDataStore{
     }
 
     @Override
-    public Observable<User> getUserInfo(UserListRequest userListRequest) {
-        return this.userCache.get("test_user");
+    public Observable<User> getUserInfo(final UserListRequest userListRequest) {
+        return Observable.create(new ObservableOnSubscribe<User>() {
+            @Override
+            public void subscribe(ObservableEmitter<User> e) throws Exception {
+                User user = cacheManager.get("test_user", User.class);
+                if (user != null) {
+                    e.onNext(user);
+                    e.onComplete();
+                } else {
+                    e.onError(new RuntimeException());
+                }
+            }
+        });
     }
 }

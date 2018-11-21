@@ -7,16 +7,16 @@ import com.project.apifastchat.mappers.UsersJsonMapper;
 import com.project.apifastchat.net.INetworkManager;
 import com.project.apifastchat.stores.UserDataStore;
 import com.project.apifastchat.stores.interfaces.IUserDataStore;
-import com.project.data.cache.IUserCache;
+import com.project.data.cache.ICacheManager;
 
 public class UserDataStoreFactory {
     private final Context context;
-    private final IUserCache userCache;
+    private final ICacheManager cacheManager;
     private INetworkManager networkManager;
 
-    UserDataStoreFactory(@NonNull Context context, @NonNull IUserCache userCache, INetworkManager networkManager) {
+    UserDataStoreFactory(@NonNull Context context, @NonNull ICacheManager cacheManager, INetworkManager networkManager) {
         this.context = context.getApplicationContext();
-        this.userCache = userCache;
+        this.cacheManager = cacheManager;
         this.networkManager = networkManager;
     }
 
@@ -26,8 +26,8 @@ public class UserDataStoreFactory {
     public IUserDataStore create(final String userId) {
         IUserDataStore userDataStore;
 
-        if (!this.userCache.isExpired() && this.userCache.isCached(userId)) {
-            userDataStore = new DiskUserDataStore(this.userCache);
+        if (!cacheManager.isExpired(userId) && cacheManager.contains(userId)) {
+            userDataStore = new DiskUserDataStore(cacheManager);
         } else {
             userDataStore = createCloudDataStore();
         }
