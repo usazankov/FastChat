@@ -3,6 +3,7 @@ package com.project.apifastchat.stores;
 import com.project.apifastchat.entity.User;
 import com.project.apifastchat.mappers.UsersJsonMapper;
 import com.project.apifastchat.net.INetworkManager;
+import com.project.apifastchat.requests.UserInfoRequest;
 import com.project.apifastchat.requests.UserListRequest;
 import com.project.apifastchat.stores.interfaces.IUserDataStore;
 
@@ -33,8 +34,8 @@ public class UserDataStore extends CommonDataStore implements IUserDataStore {
     }
 
     @Override
-    public Observable<User> getUserInfo(UserListRequest userListRequest) {
-        return networkManager.executeRequest(userListRequest)
+    public Observable<User> getUserInfo(UserInfoRequest userInfoRequest) {
+        return networkManager.executeRequest(userInfoRequest)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<String, User>() {
                     @Override

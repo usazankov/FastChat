@@ -1,9 +1,10 @@
-package com.project.domain.interactor.action;
+package com.project.domain.interactor.actions;
 
 import com.project.apifastchat.entity.User;
 import com.project.apifastchat.requests.UserListRequest;
 import com.project.domain.executor.PostExecutionThread;
 import com.project.domain.executor.ThreadExecutor;
+
 
 import java.util.List;
 

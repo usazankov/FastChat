@@ -1,4 +1,4 @@
-package com.project.domain.interactor.action;
+package com.project.domain.interactor.actions;
 
 import com.project.domain.executor.PostExecutionThread;
 import com.project.domain.executor.ThreadExecutor;

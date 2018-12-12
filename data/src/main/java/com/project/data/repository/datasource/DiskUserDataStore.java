@@ -1,6 +1,7 @@
 package com.project.data.repository.datasource;
 
 import com.project.apifastchat.entity.User;
+import com.project.apifastchat.requests.UserInfoRequest;
 import com.project.apifastchat.requests.UserListRequest;
 import com.project.apifastchat.stores.interfaces.IUserDataStore;
 import com.project.data.cache.ICacheManager;
@@ -21,7 +22,7 @@ public class DiskUserDataStore implements IUserDataStore{
     }
 
     @Override
-    public Observable<User> getUserInfo(final UserListRequest userListRequest) {
+    public Observable<User> getUserInfo(final UserInfoRequest userListRequest) {
         return Observable.create(new ObservableOnSubscribe<User>() {
             @Override
             public void subscribe(ObservableEmitter<User> e) throws Exception {

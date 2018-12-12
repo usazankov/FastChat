@@ -1,4 +1,4 @@
 package com.project.domain.interactor;
 
-public interface IMessageUseCase {
+public class MessageActions {
 }
