@@ -231,6 +231,6 @@ public class StoresTest {
 
                     }
                 });
-        blockOnEvent();
+        //blockOnEvent();
     }
 }

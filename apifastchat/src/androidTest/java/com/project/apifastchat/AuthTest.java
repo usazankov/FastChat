@@ -36,7 +36,7 @@ public class AuthTest extends CommonTcp{
         }
     }
 
-    public static AuthRequest createFakeAuthReq(){
+    private static AuthRequest createFakeAuthReq(){
         return AuthRequest.newBuilder()
                 .setUserId(USER_ID)
                 .setUserName(USER_NAME)

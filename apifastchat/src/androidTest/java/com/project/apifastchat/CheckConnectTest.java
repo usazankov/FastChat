@@ -6,7 +6,7 @@ import android.util.Log;
 import com.project.apifastchat.entity.CheckConnectEntity;
 import com.project.apifastchat.entity.CodeResp;
 import com.project.apifastchat.entity.Command;
-import com.project.apifastchat.entity.CommonResp;
+import com.project.apifastchat.entity.CommonMsg;
 import com.project.apifastchat.mappers.CommonJsonMapper;
 import com.project.apifastchat.requests.CheckConnectRequest;
 
@@ -33,7 +33,7 @@ public class CheckConnectTest extends CommonTcp{
     @Override
     protected boolean onReceiveEvent(String message) {
         try {
-            CommonResp commonEnt = mapper.deserialize(message, CommonResp.class);
+            CommonMsg commonEnt = mapper.deserialize(message, CommonMsg.class);
             if(commonEnt.getCommand_obj().getCommandId() == Command.CommandId.CheckConnect){
                 CheckConnectEntity entity = mapper.deserialize(message, CheckConnectEntity.class);
                 if(entity.getCode_resp() == CodeResp.Success){

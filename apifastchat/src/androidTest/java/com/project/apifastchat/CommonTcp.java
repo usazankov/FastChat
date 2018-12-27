@@ -66,7 +66,7 @@ public abstract class CommonTcp {
     }
 
     protected void blockOnEvent(){
-        assertFalse("Таймаут приема данных", !cv.block(1000000));
+        assertFalse("Таймаут приема данных", !cv.block(10000));
     }
 
     protected void checkOnError(){

@@ -25,7 +25,7 @@ public class MessageTest extends CommonTcp {
     }
 
     @Test
-    public void getUsersListTest(){
+    public void sendMessageTest(){
         run();
         assertFalse("Нет кода ответа или код ответа не успешный", resp.getCode_resp() != CodeResp.Success);
 

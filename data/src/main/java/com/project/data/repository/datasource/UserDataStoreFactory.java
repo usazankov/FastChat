@@ -9,15 +9,10 @@ import com.project.apifastchat.stores.UserDataStore;
 import com.project.apifastchat.stores.interfaces.IUserDataStore;
 import com.project.data.cache.ICacheManager;
 
-public class UserDataStoreFactory {
-    private final Context context;
-    private final ICacheManager cacheManager;
-    private INetworkManager networkManager;
+public class UserDataStoreFactory extends CommonStoreFactory{
 
-    UserDataStoreFactory(@NonNull Context context, @NonNull ICacheManager cacheManager, INetworkManager networkManager) {
-        this.context = context.getApplicationContext();
-        this.cacheManager = cacheManager;
-        this.networkManager = networkManager;
+    public UserDataStoreFactory(@NonNull Context context, @NonNull ICacheManager cacheManager, INetworkManager networkManager) {
+        super(context, cacheManager, networkManager);
     }
 
     /**
